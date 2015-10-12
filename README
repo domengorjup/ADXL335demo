@@ -1,0 +1,3 @@
+Test hitrosti prenosa metitev pospeškomera ADXL335 po serijski povezavi.
+
+Za delovanje .py skripte je potrebna knjižnica pySerial.
