@@ -65,9 +65,9 @@ zero = 350.5    # povprečna vrednsot za (ADXL335)
 g1 = 428.2      # povprečna vrednost z osi pri merovanju (ADXL335)
 # g = meritev - zero / (g1-zero)
 
-x = (x - zero) / (g1-zero)
-y = (y - zero) / (g1-zero)
-z = (z - zero) / (g1-zero) 
+x = (x - zero) / (g1-zero) * 9.81
+y = (y - zero) / (g1-zero) * 9.81
+z = (z - zero) / (g1-zero) * 9.81
 
 # remove DC offet
 xn = x - np.mean(x)
@@ -85,37 +85,31 @@ steps =  np.array([], dtype=float)
 for i in range(1,t.size):
     step = t[i] - t[i-1]
     steps= np.append(steps, step)
-timeStep = np.mean(steps)#/1000  # /1000, ker je čas v ms
+timeStep = np.mean(steps)/1000  # /1000, ker je čas v ms
 
 zf = fft.fft(zn)/n
-zf = fft.fftshift(zf)   #shift zero f to center
-
 xf = fft.fft(xn)/n
-xf = fft.fftshift(xf)
-
 yf = fft.fft(yn)/n
-yf = fft.fftshift(yf)
-
 freq = fft.fftfreq(n,d=timeStep)
-freq = fft.fftshift(freq)
-
 
 # ------------------------------------
 # FILTER ?
 # ------------------------------------
 
+izbor = freq >= 0
 
-plt.figure()
-plt.hold(True)
-plt.plot(freq, np.abs((zf)**2), 'g')
-plt.plot(freq, np.abs((xf)**2), 'b')
-plt.plot(freq, np.abs((yf)**2), 'r')
+graf, ax = plt.subplots(2,1)
+ax[0].hold(True)
+ax[0].plot(freq[izbor], np.abs((zf)**2)[izbor], 'g')
+ax[0].plot(freq[izbor], np.abs((xf)**2)[izbor], 'b')
+ax[0].plot(freq[izbor], np.abs((yf)**2)[izbor], 'r')
+ax[0].set_xlabel(r'$f$ [Hz]')
 
-
-plt.figure()
-plt.hold(True)
-plt.plot(t,x,'b')
-plt.plot(t,y,'r')
-plt.plot(t,z,'g')
+ax[1].hold(True)
+ax[1].plot(t,x,'b')
+ax[1].plot(t,y,'r')
+ax[1].plot(t,z,'g')
+ax[1].set_xlabel(r'$t$ [s]')
+ax[1].set_ylabel(r'$\ddot{x}$ [m/s$^2$]')
 
 plt.show()
