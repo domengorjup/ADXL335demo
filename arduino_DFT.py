@@ -7,7 +7,8 @@ from numpy import fft
 import multiprocessing as mp
 from playTone import playTone
 
-outputFrequency = 150    # Hz
+
+outputFrequency = 200    # Hz
 serialSpeed = 115200
 
 # -----------------------------------------------------------------------------
